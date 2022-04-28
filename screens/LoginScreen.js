@@ -8,7 +8,6 @@ import {
   ActivityIndicator
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { login } from "../slice/authSlice";
@@ -69,29 +68,17 @@ export default function LoginScreen({ navigation }) {
           if (data["non_field_errors"] && data["non_field_errors"][0]) {
             setError(data["non_field_errors"][0]);
           }
-          setIsLoading(false);
         })
         .catch((err) => {
           setError("Something went wrong. Please try again later.");
           setIsLoading(false);
-        });
+        })
     }
   };
 
   return (
     <View style={styles.container}>
-      {isLoading && (
-        <Text
-          style={{
-            fontSize: 24,
-            color: "white",
-            textAlign: "center",
-            marginBottom: 16,
-          }}
-        >
-          <ActivityIndicator/>
-        </Text>
-      )}
+      
       <Animatable.View style={styles.innerContainer} animation="fadeInUpBig">
         {/* <View style={styles.authDetailsContainer}> */}
         <View style={{ marginBottom: 8, width: "100%" }}>
@@ -131,7 +118,13 @@ export default function LoginScreen({ navigation }) {
         {/* </View> */}
 
         <Pressable style={styles.button} onPress={doLogin}>
-          <Text style={styles.btnText}>Log In</Text>
+        {
+          isLoading ? (
+          <ActivityIndicator size="small" color={{PRIMARY_BTN_COLOR}} style={styles.btnText}/>
+          ): 
+          <Text style={styles.btnText}>Login</Text>
+          
+          }
         </Pressable>
 
         <Text

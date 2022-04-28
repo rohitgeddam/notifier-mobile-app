@@ -3,6 +3,6 @@ let PRIMARY_BACKGROUND_COLOR = "#4BB09F"
 
 
 
-let API_URL = "http://6f6b-2405-201-3005-e085-72b7-fc56-217a-8433.ngrok.io"
+let API_URL = "http://0224-2405-201-3005-e085-4055-fca8-e162-abcf.ngrok.io"
 
 export { PRIMARY_BTN_COLOR, PRIMARY_BACKGROUND_COLOR, API_URL}
