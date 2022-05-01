@@ -67,6 +67,7 @@ export default function LoginScreen({ navigation }) {
 
           if (data["non_field_errors"] && data["non_field_errors"][0]) {
             setError(data["non_field_errors"][0]);
+            setIsLoading(false);
           }
         })
         .catch((err) => {

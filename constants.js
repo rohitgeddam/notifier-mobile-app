@@ -1,8 +1,6 @@
 let PRIMARY_BTN_COLOR = "#0BCE83";
 let PRIMARY_BACKGROUND_COLOR = "#4BB09F"
+let API_URL = "https://notifier-bitd.herokuapp.com"
 
 
-
-let API_URL = "http://0224-2405-201-3005-e085-4055-fca8-e162-abcf.ngrok.io"
-
-export { PRIMARY_BTN_COLOR, PRIMARY_BACKGROUND_COLOR, API_URL}
+export { PRIMARY_BTN_COLOR, PRIMARY_BACKGROUND_COLOR, API_URL }

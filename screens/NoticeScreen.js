@@ -20,7 +20,7 @@ import {
   import * as Animatable from "react-native-animatable";
   import AsyncStorage from "@react-native-async-storage/async-storage";
 
-  export default function HomeScreen({ navigation }) {
+  export default function NoticeScreen({ navigation }) {
 
     const dispatch = useDispatch()
 
@@ -34,7 +34,6 @@ import {
     }
     return (
       <View style={styles.container}>
-          <Text>Home Screen</Text>
           <Button title="logout" onPress={e=>{doLogout()}}>Logout</Button>
       </View>
     );
