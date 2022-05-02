@@ -3,7 +3,7 @@ import { store } from "./store";
 import { StyleSheet, View, Text, SafeAreaView } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { PRIMARY_BACKGROUND_COLOR } from './constants'
+import { PRIMARY_BACKGROUND_COLOR } from "./constants";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -14,8 +14,8 @@ import NoticeScreen from "./screens/NoticeScreen";
 import EventScreen from "./screens/EventScreen";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import IonIcon from 'react-native-vector-icons/Ionicons';
-import AntIcon from 'react-native-vector-icons/AntDesign';
+import IonIcon from "react-native-vector-icons/Ionicons";
+import AntIcon from "react-native-vector-icons/AntDesign";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -23,48 +23,63 @@ const Tab = createBottomTabNavigator();
 import { useSelector, useDispatch } from "react-redux";
 import { restoreToken } from "./slice/authSlice";
 
+function IndexTabs() {
+  return (
+    <Tab.Navigator
+      initialRouteName="Notice"
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
 
-function IndexTabs(){
-  return(
-        <Tab.Navigator 
-        initialRouteName="Notice"
-        screenOptions={ ({ route }) => ({
+          if (route.name === "Notice") {
+            iconName = focused ? "megaphone" : "megaphone-outline";
+          } else if (route.name === "Events") {
+            iconName = focused ? "calendar" : "calendar-outline";
+          } else if (route.name === "Jobs") {
+            iconName = focused ? "school" : "school-outline";
+          } else if (route.name === "Account") {
+            iconName = focused ? "person" : "person-outline";
+          }
 
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
+          // You can return any component that you like here!
+          return (
+            <IonIcon
+              name={iconName}
+              size={30}
+              color={PRIMARY_BACKGROUND_COLOR}
+            />
+          );
+        },
+        tabBarActiveTintColor: PRIMARY_BACKGROUND_COLOR,
+        tabBarInactiveTintColor: "gray",
+        showLabel: false,
+      })}
+    >
+      <Tab.Screen
+        name="Notice"
+        component={NoticeScreen}
+        options={{ headerShown: false }}
+      />
 
-            if (route.name === 'Notice') {
-              iconName = focused
-                ? 'megaphone'
-                : 'megaphone-outline';
-            } else if (route.name === 'Events') {
-              iconName = focused ? 'calendar' : 'calendar-outline';
-            } else if (route.name === 'Jobs') {
-              iconName = focused ? 'school' : 'school-outline';
-            } else if (route.name === 'Account') {
-              iconName = focused ? 'person' : 'person-outline';
-            }
+      <Tab.Screen
+        name="Events"
+        component={EventScreen}
+        options={{ headerShown: false }}
+      />
 
-            // You can return any component that you like here!
-            return <IonIcon name={iconName} size={size} color={PRIMARY_BACKGROUND_COLOR} />;
-          },
-          tabBarActiveTintColor: PRIMARY_BACKGROUND_COLOR,
-          tabBarInactiveTintColor: 'gray',
-          showLabel: false,
+      <Tab.Screen
+        name="Jobs"
+        component={EventScreen}
+        options={{ headerShown: false }}
+      />
 
-        })}>
-           <Tab.Screen name="Notice" component={NoticeScreen}  options={{ headerShown: false }}/>
-
-<Tab.Screen name="Events" component={EventScreen}  options={{ headerShown: false }}/>
-
-<Tab.Screen name="Jobs" component={EventScreen}  options={{ headerShown: false }}/>
-
-
-<Tab.Screen name="Account" component={EventScreen}  options={{ headerShown: false }}/>
-        </Tab.Navigator>
-  )
-
-
+      <Tab.Screen
+        name="Account"
+        component={EventScreen}
+        options={{ headerShown: false }}
+      />
+    </Tab.Navigator>
+  );
 }
 
 export default function IndexScreen() {

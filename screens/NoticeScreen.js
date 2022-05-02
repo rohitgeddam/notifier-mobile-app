@@ -1,49 +1,74 @@
 import {
-    StyleSheet,
-    Text,
-    Image,
-    Pressable,
-    View,
-    Button,
-    TextInput,
-  } from "react-native";
-  import { useEffect, useState } from "react";
-  import { useSelector, useDispatch } from "react-redux";
+  StyleSheet,
+  Text,
+  Image,
+  Pressable,
+  View,
+  Button,
+  TextInput,
+  ScrollView,
+  ActivityIndicator
+} from "react-native";
 
-  import { logout } from "../slice/authSlice";
+import { API_URL } from "../constants";
 
-  import {
-    PRIMARY_BTN_COLOR,
-    PRIMARY_BACKGROUND_COLOR,
-    API_URL,
-  } from "../constants";
-  import * as Animatable from "react-native-animatable";
-  import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { PRIMARY_BTN_COLOR } from '../constants'
+import * as Animatable from "react-native-animatable";
+import NoticeCard from "../components/NoticeCard";
 
-  export default function NoticeScreen({ navigation }) {
+import ContainerScreen from "./ContainerScreen";
 
-    const dispatch = useDispatch()
+export default function NoticeScreen({ navigation }) {
+  const userToken = useSelector((state) => state.auth.token);
+  const [notices, setNotice] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-    const doLogout = async () => {
-      try {
-        await AsyncStorage.removeItem("userToken");
-      } catch (e) {
-        console.log(e)
-      }
-      dispatch(logout())
-    }
-    return (
-      <View style={styles.container}>
-          <Button title="logout" onPress={e=>{doLogout()}}>Logout</Button>
-      </View>
-    );
+  useEffect(() => {
+    console.log(userToken);
+    setIsLoading(true);
+    fetch(`${API_URL}/api/v1/notices/list/`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: "Token " + userToken,
+      },
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        setNotice(data);
+        setIsLoading(false);
+      })
+      .catch(err => {
+        setIsLoading(false);
+        console.log(err);
+      })
+  }, []);
+
+  return (
+    <ContainerScreen title="Notice">
+      { isLoading && <ActivityIndicator size="small" color={{PRIMARY_BTN_COLOR}} />}
+      <ScrollView style={styles.ScrollView}>
+        {notices && notices.map((notice) => (
+          <NoticeCard
+            key={notice.id}
+            title={notice.title}
+            tags={notice.tags}
+            content={notice.content}
+            postedOn={notice.posted_on}
+          />
+        ))}
+      </ScrollView>
+    </ContainerScreen>
+  );
+}
+
+const styles = StyleSheet.create({
+  ScrollView:{
+    // display: 'flex',
   }
-  
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: "flex-end",
-      backgroundColor: PRIMARY_BACKGROUND_COLOR,
-    },
-  });
-  
+});
