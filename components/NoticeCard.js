@@ -13,11 +13,14 @@ import {
   PRIMARY_BACKGROUND_DARK_COLOR,
   API_URL,
 } from "../constants";
+import * as Animatable from 'react-native-animatable';
+
+
 import YearPill from "./YearPill";
 
 export default function NoticeCard({ title, content, tags, postedOn }) {
   return (
-    <View style={styles.container}>
+    <Animatable.View style={styles.container} animation="fadeInUpBig" duration={1500}>
       <Text style={styles.cardHeading}>{title}</Text>
 
       <Text style={styles.postedOn}>
@@ -35,7 +38,7 @@ export default function NoticeCard({ title, content, tags, postedOn }) {
               )
           })}
       </View>
-    </View>
+    </Animatable.View>
   );
 }
 
