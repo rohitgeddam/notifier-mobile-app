@@ -59,7 +59,7 @@ export default function LoginScreen({ navigation }) {
         })
         .then(async (data) => {
           if (data["token"]) {
-            dispatch(login(data["token"]));
+            dispatch(login({"token": data["token"]}));
             try {
               await AsyncStorage.setItem("userToken", data["token"]);
             } catch (e) {}

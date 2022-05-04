@@ -40,15 +40,15 @@ export default function NoticeDetailScreen({ route, navigation }) {
 
         {Platform.OS === "ios" ? (
           // iOS requires a textinput for word selections
-          <TextInput value={notice.content} editable={false} multiline />
+          <TextInput style={styles.content} value={notice.content} editable={false} multiline />
         ) : (
           // Android can do word selections just with <Text>
-          <Text selectable>{notice.content}</Text>
+          <Text style={styles.content}  selectable>{notice.content}</Text>
         )}
 
-        <Text style={styles.content} selectable>
+        {/* <Text style={styles.content} selectable>
           
-        </Text>
+        </Text> */}
 
       </ScrollView>
     </View>
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
   content: {
     color: "black",
     fontWeight: "500",
-    lineHeight: 24,
+    lineHeight: 18,
   },
   tagContainer: {
     // height: 150,

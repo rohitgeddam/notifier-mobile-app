@@ -94,8 +94,7 @@ export default function IndexScreen() {
 
       try {
         userToken = await AsyncStorage.getItem("userToken");
-        console.log("USER TOKEN", userToken);
-        console.log("AUTH TOKEN", authState);
+        // console.log("AUTH TOKEN", authState);
       } catch (e) {
         console.log(e);
       }

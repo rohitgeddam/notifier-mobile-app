@@ -24,22 +24,30 @@ import NoticeDetailScreen from "./NoticeDetailScreen";
 import ContainerScreen from "./ContainerScreen";
 
 export function NoticeScreen({ navigation }) {
-  const userToken = useSelector((state) => state.auth.token);
+  const authState = useSelector((state) => {
+    return state.auth
+  });
+  
+  console.log("USER TOIDJSFDF", authState)
   const [notices, setNotice] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    console.log(userToken);
     setIsLoading(true);
+    console.log("USER " , authState)
     fetch(`${API_URL}/api/v1/notices/list/`, {
       method: "GET",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: "Token " + userToken,
+        Authorization: "Token " + authState.token,
       },
     })
       .then((res) => {
+        console.log("status ", res.status, " ", typeof(res.status))
+        if(res.status === 401) {
+            return null
+        }
         return res.json();
       })
       .then((data) => {
@@ -51,7 +59,7 @@ export function NoticeScreen({ navigation }) {
         console.log(err);
       });
   }, []);
-
+  // console.log("NOTICES ", notices)
   return (
     <ContainerScreen title="Notice">
       {isLoading && (
