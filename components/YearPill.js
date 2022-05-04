@@ -7,6 +7,7 @@ import {
   Button,
   TextInput,
 } from "react-native";
+import {SECONDARY_BTN_COLOR} from '../constants';
 
 export default function YearPill({ year }) {
   return (
@@ -26,8 +27,12 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
-    padding: 4,
+    paddingLeft: 8,
+    paddingRight: 8,
+    paddingTop: 2,
+    paddingBottom: 2,
     marginRight: 4,
+    marginBottom: 4
   },
 
   pillContent: {

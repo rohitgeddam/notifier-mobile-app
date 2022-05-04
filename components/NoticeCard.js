@@ -66,18 +66,21 @@ const styles = StyleSheet.create({
     fontSize: 18,
     lineHeight: 21.78,
     marginBottom: 4,
+    letterSpacing: 1,
   },
   cardContent: {
       fontWeight: '400',
       fontSize: 14,
       lineHeight: 14.5,
-      fontWeight: "400"
+      fontWeight: "400",
+      lineHeight: 18
   },
 
   tagContainer:{
       // height: 150,
       flexDirection: 'row',
       marginTop: 16,
+      flexWrap: "wrap",
   },
   postedOn:{
     color: 'gray',

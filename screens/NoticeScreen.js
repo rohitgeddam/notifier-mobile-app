@@ -7,20 +7,23 @@ import {
   Button,
   TextInput,
   ScrollView,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
+
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { API_URL } from "../constants";
 
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { PRIMARY_BTN_COLOR } from '../constants'
+import { PRIMARY_BTN_COLOR, PRIMARY_BACKGROUND_COLOR } from "../constants";
 import * as Animatable from "react-native-animatable";
 import NoticeCard from "../components/NoticeCard";
+import NoticeDetailScreen from "./NoticeDetailScreen";
 
 import ContainerScreen from "./ContainerScreen";
 
-export default function NoticeScreen({ navigation }) {
+export function NoticeScreen({ navigation }) {
   const userToken = useSelector((state) => state.auth.token);
   const [notices, setNotice] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -43,32 +46,64 @@ export default function NoticeScreen({ navigation }) {
         setNotice(data);
         setIsLoading(false);
       })
-      .catch(err => {
+      .catch((err) => {
         setIsLoading(false);
         console.log(err);
-      })
+      });
   }, []);
 
   return (
     <ContainerScreen title="Notice">
-      { isLoading && <ActivityIndicator size="small" color={{PRIMARY_BTN_COLOR}} />}
+      {isLoading && (
+        <ActivityIndicator size="large" color={{ PRIMARY_BTN_COLOR }} />
+      )}
       <ScrollView style={styles.ScrollView}>
-        {notices && notices.map((notice) => (
-          <NoticeCard
-            key={notice.id}
-            title={notice.title}
-            tags={notice.tags}
-            content={notice.content}
-            postedOn={notice.posted_on}
-          />
-        ))}
+        {notices &&
+          notices.map((notice) => (
+            <Pressable
+              onPress={() => navigation.navigate("notice-detail", {notice: notice})}
+              key={notice.id}
+            >
+              <NoticeCard
+                title={notice.title}
+                tags={notice.tags}
+                content={notice.content}
+                postedOn={notice.posted_on}
+              />
+            </Pressable>
+          ))}
       </ScrollView>
     </ContainerScreen>
   );
 }
 
 const styles = StyleSheet.create({
-  ScrollView:{
+  ScrollView: {
     // display: 'flex',
-  }
+  },
 });
+
+const Stack = createNativeStackNavigator();
+
+export default function NoticeIndexScreen() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="notice-list"
+        component={NoticeScreen}
+        options={{ headerShown: false, title: "My home" }}
+      />
+      <Stack.Screen
+        name="notice-detail"
+        component={NoticeDetailScreen}
+        options={{
+          title: "Notice",
+          headerStyle: {
+            backgroundColor: PRIMARY_BACKGROUND_COLOR,
+          },
+          headerTintColor: "#fff",
+        }}
+      />
+    </Stack.Navigator>
+  );
+}

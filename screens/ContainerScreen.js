@@ -21,7 +21,7 @@ import {
   import AsyncStorage from "@react-native-async-storage/async-storage";
 import { borderStartColor, borderTopColor } from "react-native/Libraries/Components/View/ReactNativeStyleAttributes";
 
-  export default function ContainerScreen({ children, title }) {
+  export default function ContainerScreen({ children, title='' }) {
 
     
     return (
