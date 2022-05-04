@@ -9,6 +9,7 @@ import {
   ScrollView,
   ActivityIndicator,
   Platform,
+  useWindowDimensions
 } from "react-native";
 import {
   PRIMARY_BTN_COLOR,
@@ -18,9 +19,12 @@ import {
 } from "../constants";
 
 import YearPill from "../components/YearPill";
+import RenderHTML from "react-native-render-html";
 
 export default function NoticeDetailScreen({ route, navigation }) {
   const { notice } = route.params;
+  const { width } = useWindowDimensions();
+
   console.log(notice);
   return (
     <View style={styles.container}>
@@ -40,10 +44,14 @@ export default function NoticeDetailScreen({ route, navigation }) {
 
         {Platform.OS === "ios" ? (
           // iOS requires a textinput for word selections
-          <TextInput style={styles.content} value={notice.content} editable={false} multiline />
+          // <TextInput style={styles.content} value={notice.content} editable={false} multiline />
+          <RenderHTML contentWidth={width} source={{html: notice.content }} />
+
         ) : (
           // Android can do word selections just with <Text>
-          <Text style={styles.content}  selectable>{notice.content}</Text>
+          // <Text style={styles.content}  selectable>{notice.content}</Text>
+          <RenderHTML contentWidth={width} source={{html: notice.content }} />
+
         )}
 
         {/* <Text style={styles.content} selectable>

@@ -6,6 +6,7 @@ import {
   View,
   Button,
   TextInput,
+  useWindowDimensions
 } from "react-native";
 import {
   PRIMARY_BTN_COLOR,
@@ -14,11 +15,14 @@ import {
   API_URL,
 } from "../constants";
 import * as Animatable from 'react-native-animatable';
+import RenderHTML from "react-native-render-html";
 
 
 import YearPill from "./YearPill";
 
 export default function NoticeCard({ title, content, tags, postedOn }) {
+  const { width } = useWindowDimensions();
+
   return (
     <Animatable.View style={styles.container} animation="fadeInUpBig" duration={1500}>
       <Text style={styles.cardHeading}>{title}</Text>
@@ -27,9 +31,16 @@ export default function NoticeCard({ title, content, tags, postedOn }) {
         <Text style={{fontWeight: "800"}}>Posted on - </Text>{postedOn}
       </Text>
 
-      <Text style={styles.cardContent} numberOfLines={4} ellipsizeMode="tail">
+      {/* <Text style={styles.cardContent} numberOfLines={4} ellipsizeMode="tail">
         {content}
-      </Text>
+      </Text> */}
+
+
+      <Text style={styles.cardContent} numberOfLines={4} ellipsizeMode="tail">
+          {/* {description} */}
+        <RenderHTML contentWidth={width} source={{html: `${content.slice(0,200)}...` }} />
+        </Text>
+  
 
       <View style={styles.tagContainer}>
           {tags.map((year) => {

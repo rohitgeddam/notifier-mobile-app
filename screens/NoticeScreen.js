@@ -28,13 +28,11 @@ export function NoticeScreen({ navigation }) {
     return state.auth
   });
   
-  console.log("USER TOIDJSFDF", authState)
   const [notices, setNotice] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setIsLoading(true);
-    console.log("USER " , authState)
     fetch(`${API_URL}/api/v1/notices/list/`, {
       method: "GET",
       headers: {
@@ -44,7 +42,6 @@ export function NoticeScreen({ navigation }) {
       },
     })
       .then((res) => {
-        console.log("status ", res.status, " ", typeof(res.status))
         if(res.status === 401) {
             return null
         }
@@ -99,7 +96,7 @@ export default function NoticeIndexScreen() {
       <Stack.Screen
         name="notice-list"
         component={NoticeScreen}
-        options={{ headerShown: false, title: "My home" }}
+        options={{ headerShown: false, }}
       />
       <Stack.Screen
         name="notice-detail"
