@@ -22,7 +22,7 @@ const Tab = createBottomTabNavigator();
 
 import { useSelector, useDispatch } from "react-redux";
 import { restoreToken } from "./slice/authSlice";
-
+import LogoutScreen from "./screens/logoutScreen";
 function IndexTabs() {
   return (
     <Tab.Navigator
@@ -69,7 +69,7 @@ function IndexTabs() {
 
       <Tab.Screen
         name="Jobs"
-        component={EventScreen}
+        component={LogoutScreen}
         options={{ headerShown: false }}
       />
 
