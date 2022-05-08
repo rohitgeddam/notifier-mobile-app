@@ -12,6 +12,7 @@ import SplashScreen from "./screens/SplashScreen";
 import LoginScreen from "./screens/LoginScreen";
 import NoticeScreen from "./screens/NoticeScreen";
 import EventScreen from "./screens/EventScreen";
+import ProfileScreen from "./screens/ProfileScreen";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import IonIcon from "react-native-vector-icons/Ionicons";
@@ -75,7 +76,7 @@ function IndexTabs() {
 
       <Tab.Screen
         name="Account"
-        component={EventScreen}
+        component={ProfileScreen}
         options={{ headerShown: false }}
       />
     </Tab.Navigator>

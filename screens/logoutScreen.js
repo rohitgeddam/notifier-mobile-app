@@ -23,7 +23,7 @@ import {
   export default function LogoutScreen({ navigation }) {
 
     const dispatch = useDispatch()
-
+    
     const doLogout = async () => {
       try {
         await AsyncStorage.removeItem("userToken");
