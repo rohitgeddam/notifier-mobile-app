@@ -7,6 +7,7 @@ import { PRIMARY_BACKGROUND_COLOR } from "./constants";
 import { useEffect, useState, useRef } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+
 import GettingStartedScreen from "./screens/GettingStarted";
 import SplashScreen from "./screens/SplashScreen";
 import LoginScreen from "./screens/LoginScreen";
@@ -19,9 +20,10 @@ import IonIcon from "react-native-vector-icons/Ionicons";
 import AntIcon from "react-native-vector-icons/AntDesign";
 
 import * as Notifications from "expo-notifications";
-import * as Device from "expo-device";
-import * as TaskManager from "expo-task-manager";
-const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK";
+
+import {
+  API_URL,
+} from "./constants";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -91,7 +93,29 @@ function IndexTabs() {
   );
 }
 
-
+const post_push_token = (token, userToken) => {
+  console.log("USER TOKEN", userToken)
+  fetch(`${API_URL}/api/v1/push_token/`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: "Token " + userToken,
+    },
+    body: JSON.stringify({
+      "token": token
+    })
+  })
+    .then((res) => {
+      return res.json();
+    })
+    .then((data) => {
+      console.log(data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
 
 
 export default function IndexScreen() {
@@ -101,6 +125,7 @@ export default function IndexScreen() {
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
+
 
   const registerForPushNotificationsAsync = async () => {
     try {
@@ -140,11 +165,20 @@ export default function IndexScreen() {
 
 
 
-      registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+      registerForPushNotificationsAsync().then(token => {
+        
+        // make a call to server and set the token.
+        post_push_token(token, userToken);
+        
+        setExpoPushToken(token);
+
+
+      });
 
     // This listener is fired whenever a notification is received while the app is foregrounded
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       console.log("RECEIVE")
+      // refresh page
       setNotification(notification);
     });
 

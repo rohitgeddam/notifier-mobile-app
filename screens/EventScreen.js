@@ -7,9 +7,10 @@ import {
   Button,
   TextInput,
   ScrollView,
-  ActivityIndicator
+  ActivityIndicator,
+  RefreshControl
 } from "react-native";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -31,9 +32,15 @@ export  function EventScreen({ navigation }) {
 
   const [events, setEvents] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    setIsLoading(true);
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    populateData();
+  }, []);
+
+  const populateData = () => {
+
     fetch(`${API_URL}/api/v1/events/list/`, {
       method: "GET",
       headers: {
@@ -52,11 +59,17 @@ export  function EventScreen({ navigation }) {
         setEvents(data);
         console.log(data);
         setIsLoading(false);
+        setRefreshing(false);
       })
       .catch((err) => {
         setIsLoading(false);
+        setRefreshing(false);
         console.log(err);
       });
+  }
+  useEffect(() => {
+    setIsLoading(true);
+    populateData();
   }, []);
 
   return (
@@ -64,7 +77,12 @@ export  function EventScreen({ navigation }) {
     {isLoading && (
       <ActivityIndicator size="large" color={{ PRIMARY_BTN_COLOR }} />
     )}
-    <ScrollView style={styles.ScrollView}>
+    <ScrollView style={styles.ScrollView} refreshControl={
+        <RefreshControl
+          refreshing = {refreshing}
+          onRefresh = {onRefresh}  
+        />
+      }>
       {events &&
         events.map((event) => (
           <Pressable

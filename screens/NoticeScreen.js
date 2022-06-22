@@ -8,13 +8,14 @@ import {
   TextInput,
   ScrollView,
   ActivityIndicator,
+  RefreshControl
 } from "react-native";
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { API_URL } from "../constants";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { PRIMARY_BTN_COLOR, PRIMARY_BACKGROUND_COLOR } from "../constants";
 import * as Animatable from "react-native-animatable";
@@ -30,9 +31,14 @@ export function NoticeScreen({ navigation }) {
   
   const [notices, setNotice] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    setIsLoading(true);
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    populateData();
+  }, []);
+
+  const populateData = () => {
     fetch(`${API_URL}/api/v1/notices/list/`, {
       method: "GET",
       headers: {
@@ -50,11 +56,18 @@ export function NoticeScreen({ navigation }) {
       .then((data) => {
         setNotice(data);
         setIsLoading(false);
+        setRefreshing(false);
       })
       .catch((err) => {
         setIsLoading(false);
+        setRefreshing(false);
         console.log(err);
       });
+  }
+
+  useEffect(() => {
+    setIsLoading(true);
+    populateData()
   }, []);
   // console.log("NOTICES ", notices)
   return (
@@ -62,7 +75,12 @@ export function NoticeScreen({ navigation }) {
       {isLoading && (
         <ActivityIndicator size="large" color={{ PRIMARY_BTN_COLOR }} />
       )}
-      <ScrollView style={styles.ScrollView}>
+      <ScrollView style={styles.ScrollView} refreshControl={
+        <RefreshControl
+          refreshing = {refreshing}
+          onRefresh = {onRefresh}  
+        />
+      }>
         {notices &&
           notices.map((notice) => (
             <Pressable
