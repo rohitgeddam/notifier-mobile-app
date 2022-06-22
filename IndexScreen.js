@@ -116,6 +116,11 @@ const post_push_token = (token, userToken) => {
     })
     .catch((err) => {
       console.log(err);
+      Toast.show({
+        type: 'error',
+        text1: 'Notifications',
+        text2: "There was some error while enabling push notification for your device"
+      });
     });
 }
 
@@ -147,6 +152,17 @@ export default function IndexScreen() {
       }
       const token = (await Notifications.getExpoPushTokenAsync()).data;
       console.log(token);
+
+      if (Platform.OS === 'android') {
+        Notifications.setNotificationChannelAsync('default', {
+          name: 'default',
+          importance: Notifications.AndroidImportance.MAX,
+          vibrationPattern: [0, 250, 250, 250],
+          lightColor: '#FF231F7C',
+        });
+      }
+
+
       return token;
     } catch (error) {
       console.error(error);
@@ -176,11 +192,15 @@ export default function IndexScreen() {
 
 
 
-      registerForPushNotificationsAsync().then(token => {
+      await registerForPushNotificationsAsync().then(token => {
         
         // make a call to server and set the token.
         post_push_token(token, userToken);
-        
+         Toast.show({
+          type: 'info',
+          text1: 'Notifications',
+          text2: token
+        });
         setExpoPushToken(token);
 
 
