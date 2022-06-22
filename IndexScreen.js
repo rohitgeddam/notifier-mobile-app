@@ -4,7 +4,7 @@ import { StyleSheet, View, Text, SafeAreaView } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { PRIMARY_BACKGROUND_COLOR } from "./constants";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import GettingStartedScreen from "./screens/GettingStarted";
@@ -18,12 +18,20 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import AntIcon from "react-native-vector-icons/AntDesign";
 
+import * as Notifications from "expo-notifications";
+import * as Device from "expo-device";
+import * as TaskManager from "expo-task-manager";
+const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK";
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 import { useSelector, useDispatch } from "react-redux";
 import { restoreToken } from "./slice/authSlice";
 import LogoutScreen from "./screens/logoutScreen";
+
+
+
 function IndexTabs() {
   return (
     <Tab.Navigator
@@ -83,9 +91,36 @@ function IndexTabs() {
   );
 }
 
+
+
+
 export default function IndexScreen() {
   const dispatch = useDispatch();
   const authState = useSelector((state) => state.auth);
+  const [expoPushToken, setExpoPushToken] = useState('');
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
+
+  const registerForPushNotificationsAsync = async () => {
+    try {
+      const { status: existingStatus } =
+        await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== "granted") {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== "granted") {
+        throw new Error("Permission not granted!");
+      }
+      const token = (await Notifications.getExpoPushTokenAsync()).data;
+      console.log(token);
+      return token;
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   //   const [isLoading, setIsLoading]= useState(false)
 
@@ -95,11 +130,33 @@ export default function IndexScreen() {
 
       try {
         userToken = await AsyncStorage.getItem("userToken");
+
         // console.log("AUTH TOKEN", authState);
       } catch (e) {
         console.log(e);
       }
       dispatch(restoreToken({ token: userToken }));
+    
+
+
+
+      registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+
+    // This listener is fired whenever a notification is received while the app is foregrounded
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+      console.log("RECEIVE")
+      setNotification(notification);
+    });
+
+    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+      console.log(response);
+    });
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener.current);
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
     };
 
     bootstrapAsync();
