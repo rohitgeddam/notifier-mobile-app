@@ -28,7 +28,7 @@ export default function NoticeDetailScreen({ route, navigation }) {
   console.log(notice);
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.card}>
+      <ScrollView style={styles.card} contentContainerStyle={{ flexGrow: 1 }}>
         <Text style={styles.headerText} selectable selectionColor="orange">
           {notice.title}
         </Text>
@@ -66,7 +66,6 @@ export default function NoticeDetailScreen({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     height: "100%",
-    justifyContent: "flex-end",
     backgroundColor: PRIMARY_BACKGROUND_DARK_COLOR,
     padding: 16,
     paddingBottom: 0,

@@ -69,13 +69,13 @@ export default function ProfileScreen() {
   if (userInfo == null || isLoading) {
     return <ActivityIndicator size="large" color={{ PRIMARY_BTN_COLOR }} />;
   }
-  return (
-    <ScrollView>
+  return ( 
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <View style={styles.topContainer}>
         <Text style={styles.topContainerHeading}>Profile</Text>
         <Image style={styles.profilePhoto} source={avatarPlaceholderImg} />
       </View>
-      <View style={styles.detailContainer}>
+      <ScrollView style={styles.detailContainer} contentContainerStyle={{ flexGrow: 1 }}>
         <View>
           <Text style={styles.detailHeader}>
             <IonIcon name="person" size={30} color={PRIMARY_BACKGROUND_COLOR} />{" "}
@@ -140,21 +140,26 @@ export default function ProfileScreen() {
               <Text>No</Text>
             )}
           </View>
+
+
         </View>
 
-        <Pressable
-          onPress={(e) => {
-            doLogout();
-          }}
-          style={styles.logoutBtn}
-        >
-          <Text
-            style={{ color: "white", textAlign: "center", letterSpacing: 2 }}
+        <View>
+          <Pressable
+            onPress={(e) => {
+              doLogout();
+            }}
+            style={styles.logoutBtn}
           >
-            Logout
-          </Text>
-        </Pressable>
-      </View>
+            <Text
+              style={{ color: "white", textAlign: "center", letterSpacing: 2 }}
+            >
+              Logout
+            </Text>
+          </Pressable>
+        </View>
+        
+      </ScrollView>
     </ScrollView>
   );
 }
@@ -189,9 +194,7 @@ const styles = StyleSheet.create({
   },
 
   detailContainer: {
-    marginVertical: 8,
     padding: 32,
-    paddingBottom: 60,
   },
 
   detailHeader: {
@@ -202,6 +205,6 @@ const styles = StyleSheet.create({
 
   microDetailContainer: {
     margin: 0,
-    padding: 16,
+    padding: 12,
   },
 });

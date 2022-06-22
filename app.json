@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "notifier-app",
-    "slug": "notifier-app",
+    "name": "BITD SAN",
+    "slug": "BITD-SAN",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,9 +21,10 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.rohitgeddam.BITDSAN"
     },
     "web": {
       "favicon": "./assets/favicon.png"

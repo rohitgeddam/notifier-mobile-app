@@ -36,11 +36,10 @@ export default function NoticeCard({ title, content, tags, postedOn }) {
       </Text> */}
 
 
-      <Text style={styles.cardContent} numberOfLines={4} ellipsizeMode="tail">
-          {/* {description} */}
-        <RenderHTML contentWidth={width} source={{html: `${content.slice(0,200)}...` }} />
-        </Text>
-  
+      {/* <Text style={styles.cardContent} numberOfLines={4} ellipsizeMode="tail">
+          <RenderHTML contentWidth={width} source={{html: `${content.slice(0,200)}...` }} />
+      </Text>
+   */}
 
       <View style={styles.tagContainer}>
           {tags.map((year) => {

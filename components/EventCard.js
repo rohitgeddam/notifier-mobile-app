@@ -39,10 +39,10 @@ import {
           <Text style={{fontWeight: "800"}}>Event Time - </Text>{time}
         </Text>
   
-        <Text style={styles.cardContent} numberOfLines={4} ellipsizeMode="tail">
+        {/* <Text style={styles.cardContent} numberOfLines={4} ellipsizeMode="tail"> */}
           {/* {description} */}
-        <RenderHTML contentWidth={width} source={{html: `${description.slice(0,200)}...` }} />
-        </Text>
+        {/* <RenderHTML contentWidth={width} source={{html: `${description.slice(0,200)}...` }} />
+        </Text> */}
   
         {/* <View style={styles.tagContainer}>
             {tags.map((year) => {

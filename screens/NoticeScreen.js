@@ -75,7 +75,7 @@ export function NoticeScreen({ navigation }) {
       {isLoading && (
         <ActivityIndicator size="large" color={{ PRIMARY_BTN_COLOR }} />
       )}
-      <ScrollView style={styles.ScrollView} refreshControl={
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={styles.ScrollView} refreshControl={
         <RefreshControl
           refreshing = {refreshing}
           onRefresh = {onRefresh}  
