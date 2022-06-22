@@ -139,13 +139,23 @@ export default function IndexScreen() {
         finalStatus = status;
       }
       if (finalStatus !== "granted") {
-        throw new Error("Permission not granted!");
+        throw new Error();
+        Toast.show({
+          type: 'error',
+          text1: 'Notifications',
+          text2: "Permission not granted!"
+        });
       }
       const token = (await Notifications.getExpoPushTokenAsync()).data;
       console.log(token);
       return token;
     } catch (error) {
       console.error(error);
+      Toast.show({
+        type: 'error',
+        text1: 'Notifications',
+        text2: error
+      });
     }
   };
 
