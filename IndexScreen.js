@@ -7,6 +7,8 @@ import { PRIMARY_BACKGROUND_COLOR } from "./constants";
 import { useEffect, useState, useRef } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import Toast from 'react-native-toast-message';
+
 
 import GettingStartedScreen from "./screens/GettingStarted";
 import SplashScreen from "./screens/SplashScreen";
@@ -179,6 +181,11 @@ export default function IndexScreen() {
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       console.log("RECEIVE")
       // refresh page
+      Toast.show({
+        type: 'info',
+        text1: 'New Notification',
+        text2: 'Please refresh the page to see the new notification 🎅'
+      });
       setNotification(notification);
     });
 
