@@ -39,12 +39,12 @@ export default function ProfileScreen() {
     try {
       await AsyncStorage.removeItem("userToken");
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
-    dispatch(logout())
-  }
+    dispatch(logout());
+  };
   useEffect(() => {
-      setIsLoading(true);
+    setIsLoading(true);
     fetch(`${API_URL}/api/v1/me/`, {
       method: "GET",
       headers: {
@@ -61,13 +61,13 @@ export default function ProfileScreen() {
         setUserInfo(data);
         setIsLoading(false);
       })
-      .catch( err => {
-          console.log(err);
-          setIsLoading(false);
-      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
   }, []);
-  if(userInfo == null || isLoading){
-      return <ActivityIndicator size="large" color={{ PRIMARY_BTN_COLOR }} />
+  if (userInfo == null || isLoading) {
+    return <ActivityIndicator size="large" color={{ PRIMARY_BTN_COLOR }} />;
   }
   return (
     <ScrollView>
@@ -83,51 +83,78 @@ export default function ProfileScreen() {
           </Text>
 
           <View style={styles.microDetailContainer}>
-            <Text style={{fontWeight: '600'}}>Username</Text>
-            <Text>{userInfo['username']}</Text>
-          </View>
-          
-          <View style={styles.microDetailContainer}>
-            <Text style={{fontWeight: '600'}}>Email</Text>
-            <Text>{userInfo['email']}</Text>
+            <Text style={{ fontWeight: "600" }}>Username</Text>
+            <Text>{userInfo["username"]}</Text>
           </View>
 
           <View style={styles.microDetailContainer}>
-            <Text style={{fontWeight: '600'}}>Batch</Text>
-            { userInfo['batch'] ? <Text>{userInfo['batch']}</Text>: <Text>Not Given</Text> }
+            <Text style={{ fontWeight: "600" }}>Email</Text>
+            <Text>{userInfo["email"]}</Text>
           </View>
 
           <View style={styles.microDetailContainer}>
-            <Text style={{fontWeight: '600'}}>Phone Number</Text>
-            { userInfo['phone_number'] ? <Text>{userInfo['phone_number']}</Text>: <Text>Not Given</Text> }
+            <Text style={{ fontWeight: "600" }}>Batch</Text>
+            {userInfo["batch"] ? (
+              <Text>{userInfo["batch"]}</Text>
+            ) : (
+              <Text>Not Given</Text>
+            )}
           </View>
 
-
+          <View style={styles.microDetailContainer}>
+            <Text style={{ fontWeight: "600" }}>Phone Number</Text>
+            {userInfo["phone_number"] ? (
+              <Text>{userInfo["phone_number"]}</Text>
+            ) : (
+              <Text>Not Given</Text>
+            )}
+          </View>
         </View>
-         {/* Settings  */}
+        {/* Settings  */}
         <View>
           <Text style={styles.detailHeader}>
-            <IonIcon name="settings" size={30} color={PRIMARY_BACKGROUND_COLOR} />{" "}
+            <IonIcon
+              name="settings"
+              size={30}
+              color={PRIMARY_BACKGROUND_COLOR}
+            />{" "}
             Settings
           </Text>
 
           <View style={styles.microDetailContainer}>
-            <Text style={{fontWeight: '600'}}>Receive email notification</Text>
-            {userInfo['receive_email_notification'] ? <Text>Yes</Text> : <Text>No</Text>}
-          </View>
-          
-          <View style={styles.microDetailContainer}>
-            <Text style={{fontWeight: '600'}}>Receive sms notification</Text>
-            {userInfo['receive_sms_notification'] ? <Text>Yes</Text> : <Text>No</Text>}
+            <Text style={{ fontWeight: "600" }}>
+              Receive email notification
+            </Text>
+            {userInfo["receive_email_notification"] ? (
+              <Text>Yes</Text>
+            ) : (
+              <Text>No</Text>
+            )}
           </View>
 
+          <View style={styles.microDetailContainer}>
+            <Text style={{ fontWeight: "600" }}>Receive sms notification</Text>
+            {userInfo["receive_sms_notification"] ? (
+              <Text>Yes</Text>
+            ) : (
+              <Text>No</Text>
+            )}
+          </View>
         </View>
 
-        <Pressable onPress={e=>{doLogout()}} style={styles.logoutBtn}><Text style={{color: 'white', textAlign: 'center'}}>Logout</Text></Pressable>
+        <Pressable
+          onPress={(e) => {
+            doLogout();
+          }}
+          style={styles.logoutBtn}
+        >
+          <Text
+            style={{ color: "white", textAlign: "center", letterSpacing: 2 }}
+          >
+            Logout
+          </Text>
+        </Pressable>
       </View>
-
-     
-
     </ScrollView>
   );
 }
@@ -136,7 +163,6 @@ const styles = StyleSheet.create({
   topContainer: {
     backgroundColor: PRIMARY_BACKGROUND_DARK_COLOR,
     height: "25%",
-    // borderBottomRightRadius: 100,
     borderBottomLeftRadius: 800,
     justifyContent: "center",
     alignItems: "center",
@@ -145,8 +171,7 @@ const styles = StyleSheet.create({
   logoutBtn: {
     backgroundColor: PRIMARY_BACKGROUND_COLOR,
     padding: 8,
-    borderRadius: 8
-  
+    borderRadius: 8,
   },
   topContainerHeading: {
     color: "white",
@@ -158,17 +183,15 @@ const styles = StyleSheet.create({
     bottom: -40,
     left: "50%",
     transform: [{ translateX: -50 }],
-
     height: 100,
     width: 100,
-
     borderRadius: 50,
   },
 
   detailContainer: {
-      marginVertical: 16,
-      padding: 8,
-      paddingBottom: 60
+    marginVertical: 8,
+    padding: 32,
+    paddingBottom: 60,
   },
 
   detailHeader: {
@@ -177,8 +200,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 
-  microDetailContainer:{
-      margin: 0,
-      padding: 16
-  }
+  microDetailContainer: {
+    margin: 0,
+    padding: 16,
+  },
 });

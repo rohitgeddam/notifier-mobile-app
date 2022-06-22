@@ -68,11 +68,11 @@ function IndexTabs() {
         options={{ headerShown: false }}
       />
 
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Jobs"
         component={LogoutScreen}
         options={{ headerShown: false }}
-      />
+      /> */}
 
       <Tab.Screen
         name="Account"
