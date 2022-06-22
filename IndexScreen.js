@@ -139,7 +139,6 @@ export default function IndexScreen() {
         finalStatus = status;
       }
       if (finalStatus !== "granted") {
-        throw new Error();
         Toast.show({
           type: 'error',
           text1: 'Notifications',
