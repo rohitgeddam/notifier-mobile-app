@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "700597662275",
+    "project_id": "notifier-bitd",
+    "storage_bucket": "notifier-bitd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:700597662275:android:939764fd05a8c5f5df9af6",
+        "android_client_info": {
+          "package_name": "com.rohitgeddam.BITDSAN"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "700597662275-li1ac9frgllpaa77pfg7vpheu2eaa2l7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFFaOL1__8CE1G4xiQxxvCKzhC6P9O760"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "700597662275-li1ac9frgllpaa77pfg7vpheu2eaa2l7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

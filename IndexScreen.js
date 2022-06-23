@@ -141,6 +141,7 @@ const post_push_token = (token, userToken) => {
 };
 
 async function registerForPushNotificationsAsync() {
+
   let token;
   if (Device.isDevice) {
     const { status: existingStatus } =
@@ -157,6 +158,8 @@ async function registerForPushNotificationsAsync() {
         text2:
           "Failed to get push token for push notification!",
       });
+
+      alert("Permission Not Granted for Notifications 🤦. Please enable notifications for this app from your notification settings 🤧.")
       return;
     }
     token = (await Notifications.getExpoPushTokenAsync()).data;
