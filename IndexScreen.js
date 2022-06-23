@@ -151,7 +151,12 @@ async function registerForPushNotificationsAsync() {
       finalStatus = status;
     }
     if (finalStatus !== "granted") {
-      alert("Failed to get push token for push notification!");
+      Toast.show({
+        type: "error",
+        text1: "Notifications",
+        text2:
+          "Failed to get push token for push notification!",
+      });
       return;
     }
     token = (await Notifications.getExpoPushTokenAsync()).data;
@@ -223,7 +228,7 @@ export default function IndexScreen() {
   useEffect(() => {
     registerForPushNotificationsAsync().then((token) => {
       // setExpoPushToken(token);
-      if (authState.token) {
+      if (token && authState.token) {
         post_push_token(token, authState.token);
       }
 
