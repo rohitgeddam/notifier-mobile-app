@@ -57,7 +57,6 @@ export  function EventScreen({ navigation }) {
       })
       .then((data) => {
         setEvents(data);
-        console.log(data);
         setIsLoading(false);
         setRefreshing(false);
       })

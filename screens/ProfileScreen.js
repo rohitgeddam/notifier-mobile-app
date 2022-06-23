@@ -57,7 +57,6 @@ export default function ProfileScreen() {
         return res.json();
       })
       .then((data) => {
-        console.log(data);
         setUserInfo(data);
         setIsLoading(false);
       })
@@ -75,7 +74,7 @@ export default function ProfileScreen() {
         <Text style={styles.topContainerHeading}>Profile</Text>
         <Image style={styles.profilePhoto} source={avatarPlaceholderImg} />
       </View>
-      <ScrollView style={styles.detailContainer} contentContainerStyle={{ flexGrow: 1 }}>
+      <ScrollView  contentContainerStyle={{ flexGrow: 1, padding:32 }}>
         <View>
           <Text style={styles.detailHeader}>
             <IonIcon name="person" size={30} color={PRIMARY_BACKGROUND_COLOR} />{" "}
@@ -144,11 +143,12 @@ export default function ProfileScreen() {
 
         </View>
 
-        <View>
+       
           <Pressable
             onPress={(e) => {
               doLogout();
             }}
+       
             style={styles.logoutBtn}
           >
             <Text
@@ -157,7 +157,7 @@ export default function ProfileScreen() {
               Logout
             </Text>
           </Pressable>
-        </View>
+  
         
       </ScrollView>
     </ScrollView>

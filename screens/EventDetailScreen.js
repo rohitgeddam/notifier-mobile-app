@@ -27,7 +27,7 @@ import {
     console.log(event);
     return (
       <View style={styles.container}>
-        <ScrollView style={styles.card}>
+        <ScrollView contentContainerStyle={{ flexGrow: 1, ...styles.card }}>
           <Text style={styles.headerText} selectable selectionColor="orange">
             {event.title}
           </Text>

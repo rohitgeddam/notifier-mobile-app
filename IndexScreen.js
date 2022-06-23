@@ -1,14 +1,13 @@
 import { Provider } from "react-redux";
 import { store } from "./store";
-import { StyleSheet, View, Text, SafeAreaView } from "react-native";
+import { StyleSheet, View, Text, SafeAreaView, Platform } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { PRIMARY_BACKGROUND_COLOR } from "./constants";
 import { useEffect, useState, useRef } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import Toast from 'react-native-toast-message';
-
+import Toast from "react-native-toast-message";
 
 import GettingStartedScreen from "./screens/GettingStarted";
 import SplashScreen from "./screens/SplashScreen";
@@ -22,19 +21,24 @@ import IonIcon from "react-native-vector-icons/Ionicons";
 import AntIcon from "react-native-vector-icons/AntDesign";
 
 import * as Notifications from "expo-notifications";
+import * as Device from "expo-device";
 
-import {
-  API_URL,
-} from "./constants";
-
-const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
+import { API_URL } from "./constants";
 
 import { useSelector, useDispatch } from "react-redux";
 import { restoreToken } from "./slice/authSlice";
 import LogoutScreen from "./screens/logoutScreen";
 
+const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 function IndexTabs() {
   return (
@@ -96,7 +100,6 @@ function IndexTabs() {
 }
 
 const post_push_token = (token, userToken) => {
-  console.log("USER TOKEN", userToken)
   fetch(`${API_URL}/api/v1/push_token/`, {
     method: "POST",
     headers: {
@@ -105,74 +108,153 @@ const post_push_token = (token, userToken) => {
       Authorization: "Token " + userToken,
     },
     body: JSON.stringify({
-      "token": token
-    })
+      token: token,
+    }),
   })
     .then((res) => {
-      return res.json();
-    })
-    .then((data) => {
-      console.log(data);
+      if(res.status === 401){
+        Toast.show({
+          type: "info",
+          text1: "Notifications",
+          text2:
+            "Invalid user token",
+        });
+      } else {
+        console.log("TOKEN SENT TO SERVER")
+        Toast.show({
+          type: "info",
+          text1: "Notifications",
+          text2:
+            "Push Token Sent to the server",
+        });
+      }
     })
     .catch((err) => {
       console.log(err);
       Toast.show({
-        type: 'error',
-        text1: 'Notifications',
-        text2: "There was some error while enabling push notification for your device"
+        type: "error",
+        text1: "Notifications",
+        text2:
+          "There was some error while enabling push notification for your device",
       });
     });
-}
+};
 
+async function registerForPushNotificationsAsync() {
+  let token;
+  if (Device.isDevice) {
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== "granted") {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== "granted") {
+      alert("Failed to get push token for push notification!");
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    
+  } else {
+    alert("Must use physical device for Push Notifications");
+  }
+
+  if (Platform.OS === "android") {
+    Notifications.setNotificationChannelAsync("default", {
+      name: "default",
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: "#FF231F7C",
+    });
+  }
+
+  return token;
+}
 
 export default function IndexScreen() {
   const dispatch = useDispatch();
   const authState = useSelector((state) => state.auth);
-  const [expoPushToken, setExpoPushToken] = useState('');
+
+  // const [expoPushToken, setExpoPushToken] = useState("");
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
 
+  // const registerForPushNotificationsAsync = async () => {
+  //   try {
+  //     const { status: existingStatus } =
+  //       await Notifications.getPermissionsAsync();
+  //     let finalStatus = existingStatus;
+  //     if (existingStatus !== "granted") {
+  //       const { status } = await Notifications.requestPermissionsAsync();
+  //       finalStatus = status;
+  //     }
+  //     if (finalStatus !== "granted") {
+  //       Toast.show({
+  //         type: "error",
+  //         text1: "Notifications",
+  //         text2: "Permission not granted!",
+  //       });
+  //     }
+  //     const token = (await Notifications.getExpoPushTokenAsync()).data;
+  //     console.log(token);
 
-  const registerForPushNotificationsAsync = async () => {
-    try {
-      const { status: existingStatus } =
-        await Notifications.getPermissionsAsync();
-      let finalStatus = existingStatus;
-      if (existingStatus !== "granted") {
-        const { status } = await Notifications.requestPermissionsAsync();
-        finalStatus = status;
+  //     if (Platform.OS === "android") {
+  //       Notifications.setNotificationChannelAsync("default", {
+  //         name: "default",
+  //         importance: Notifications.AndroidImportance.MAX,
+  //         vibrationPattern: [0, 250, 250, 250],
+  //         lightColor: "#FF231F7C",
+  //       });
+  //     }
+
+  //     return token;
+  //   } catch (error) {
+  //     console.error(error);
+  //     Toast.show({
+  //       type: "error",
+  //       text1: "Notifications",
+  //       text2: error,
+  //     });
+  //   }
+  // };
+
+  useEffect(() => {
+    registerForPushNotificationsAsync().then((token) => {
+      // setExpoPushToken(token);
+      if (authState.token) {
+        post_push_token(token, authState.token);
       }
-      if (finalStatus !== "granted") {
+
+    });
+
+    // This listener is fired whenever a notification is received while the app is foregrounded
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener((notification) => {
+        console.log("RECEIVE");
+        // refresh page
         Toast.show({
-          type: 'error',
-          text1: 'Notifications',
-          text2: "Permission not granted!"
+          type: "info",
+          text1: "New Notification",
+          text2: "Please refresh the page to see the new notification 🎅",
         });
-      }
-      const token = (await Notifications.getExpoPushTokenAsync()).data;
-      console.log(token);
-
-      if (Platform.OS === 'android') {
-        Notifications.setNotificationChannelAsync('default', {
-          name: 'default',
-          importance: Notifications.AndroidImportance.MAX,
-          vibrationPattern: [0, 250, 250, 250],
-          lightColor: '#FF231F7C',
-        });
-      }
-
-
-      return token;
-    } catch (error) {
-      console.error(error);
-      Toast.show({
-        type: 'error',
-        text1: 'Notifications',
-        text2: error
+        setNotification(notification);
       });
-    }
-  };
+
+    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        console.log(response);
+      });
+
+    return () => {
+      Notifications.removeNotificationSubscription(
+        notificationListener.current
+      );
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, [authState]);
 
   //   const [isLoading, setIsLoading]= useState(false)
 
@@ -182,51 +264,11 @@ export default function IndexScreen() {
 
       try {
         userToken = await AsyncStorage.getItem("userToken");
-
-        // console.log("AUTH TOKEN", authState);
       } catch (e) {
         console.log(e);
       }
+
       dispatch(restoreToken({ token: userToken }));
-    
-
-
-
-      await registerForPushNotificationsAsync().then(token => {
-        
-        // make a call to server and set the token.
-        post_push_token(token, userToken);
-         Toast.show({
-          type: 'info',
-          text1: 'Notifications',
-          text2: token
-        });
-        setExpoPushToken(token);
-
-
-      });
-
-    // This listener is fired whenever a notification is received while the app is foregrounded
-    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      console.log("RECEIVE")
-      // refresh page
-      Toast.show({
-        type: 'info',
-        text1: 'New Notification',
-        text2: 'Please refresh the page to see the new notification 🎅'
-      });
-      setNotification(notification);
-    });
-
-    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log(response);
-    });
-
-    return () => {
-      Notifications.removeNotificationSubscription(notificationListener.current);
-      Notifications.removeNotificationSubscription(responseListener.current);
-    };
     };
 
     bootstrapAsync();
